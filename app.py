@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import json
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route("/api/todo/", methods=["POST", "GET"])
 def todo():
