@@ -11,7 +11,7 @@ def todo():
         data = request.json
         with open("task.json", "r") as reader:
             data = json.load(reader)
-            # print(data)
+            print(data)
             # print("hello")
             return jsonify(data), 200
     return "<h1>Bad request</h1>", 400
@@ -21,7 +21,7 @@ def todo():
 def update():
     if request.method == "POST":
         data = request.json
-        # print(data)
+        print(data)
 
         with open("task.json", "w") as writer:
             json.dump(data, writer)

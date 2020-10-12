@@ -44,7 +44,7 @@ class Task {
       htmlText += "<strike>"+this.name;
       htmlText += ", " + "Due date: " + this.dueDate+"</strike>";
       htmlText +=
-        '<input type="checkbox" onclick="strk(' +
+        '<input type="checkbox" style="color:#f00" onclick="strk(' +
         this.taskId +
         ')" name="isDone" id="isDone">';
       htmlText += '<button onclick="deleteTask(';
@@ -61,12 +61,26 @@ class Task {
 function strk(id){
   console.log("e.taskId");
   taskList.map(function(e){
-   if (id == e.taskId) {
+   if (id == e.taskId && e.isDone==false) {
      console.log(e.taskId);
      Object.assign(e, {isDone: true});
      render();
    }
+   else {
+     console.log(e.taskId);
+     Object.assign(e, {isDone: false});
+     render();
+   }
   });
+
+  var request = new XMLHttpRequest();
+  request.open("POST", "http://127.0.0.1:5000/api/update/", true);
+  request.setRequestHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5000/api/update/");
+  request.setRequestHeader("Content-Type", "application/json");
+  request.send(JSON.stringify(taskList));
+  // update the DOM
+  render()
+
 }
 
 
