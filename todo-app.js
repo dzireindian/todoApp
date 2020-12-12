@@ -153,48 +153,37 @@ function addTask(t) {
 
     console.log(taskList)
 }
+function fetchData() {
+  var request = new XMLHttpRequest();
+  request.open("GET", "http://localhost:5000/api/todo/", true);
+  request.onload = function () {
+    if (request.status === 200) {
+      let data = JSON.parse(request.responseText);
+      newList = data;
+      for (let i = 0; i < newList.length; i++) {
+      task = new Task(
+        newList[i].name,
+        newList[i].currentDate,
+        newList[i].isDone,
+        newList[i].dueDate,
+        newList[i].taskId
+      );
+      // check.push(taskList[i].taskId);
+      console.log(task);
+      taskList.push(task);
+      render();
+    }
+    // console.log(check);
+    return data;
+  }
+};
+request.send();
+}
 
 function init() {
     console.log("init called");
-
-    var request = new XMLHttpRequest();
-    request.open("GET", "http://127.0.0.1:5000/api/todo/", true);
-    request.setRequestHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5000/api/todo/");
-    request.setRequestHeader("Content-Type", "application/json");
-    request.onload = function () {
-      if (request.status === 200) {
-        let data = JSON.parse(request.responseText);
-        newList = data;
-        // console.log(taskList);
-        // console.log(taskList);
-        for (let i = 0; i < newList.length; i++) {
-          task = new Task(
-            newList[i].name,
-            newList[i].currentDate,
-            newList[i].isDone,
-            newList[i].dueDate,
-            newList[i].taskId
-          );
-          // check.push(taskList[i].taskId);
-          // console.log(task);
-          taskList.push(task);
-          render();
-        }
-        // console.log(check);
-        return data;
-      }
-    };
-    request.send();
-
-    // call a web api to retrieve the task list
-    // write a function to send a api request
-    // get the JSON
-    // assign it to taskList
-    // render
-
-    task = new Task("welcome task", new Date("May 30, 2020"), false);
-    addTask(task);
-    console.log(task);
+    fetchData();
+    render();
 }
 
 init();
