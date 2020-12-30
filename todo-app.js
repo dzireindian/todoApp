@@ -25,32 +25,32 @@ class Task {
       // htmlText += '</div>'
 
 
-      let htmlText = '<li class="task" ><div class ="eachTask">';
-      htmlText += this.name;
-      htmlText += ", " + "Due date: " + this.dueDate;
+      let htmlText = '<li class="list-group-item">';
       htmlText +=
-        '<input type="checkbox" onclick="strk(' +
+        '<input class="form-check-input me-1" type="checkbox" value="" aria-label="..." onclick="strk(' +
         this.taskId +
         ')" name="isDone" id="isDone">';
-      htmlText += '<button onclick="deleteTask(';
+      htmlText += this.name;
+      htmlText += ", " + "Due date: " + this.dueDate;
+      htmlText += '<button type="button" class="btn btn-danger" onclick="deleteTask(';
       htmlText += this.taskId;
       htmlText += ')">Delete</button>';
-      htmlText += "</div></li><br>";
+      htmlText += "</li>";
       return htmlText;
     }
 
     toStrikeString() {
-      let htmlText = '<li class="task" ><div class ="eachTask">';
-      htmlText += "<strike>"+this.name;
-      htmlText += ", " + "Due date: " + this.dueDate+"</strike>";
+      let htmlText = '<li class="list-group-item">';
       htmlText +=
-        '<input type="checkbox" style="color:#f00" onclick="strk(' +
+        '<input class="form-check-input me-1" type="checkbox" value="" aria-label="..." onclick="strk(' +
         this.taskId +
         ')" name="isDone" id="isDone">';
-      htmlText += '<button onclick="deleteTask(';
+      htmlText += "<strike>"+this.name;
+      htmlText += ", " + "Due date: " + this.dueDate+"</strike>";
+      htmlText += '<button type="button" class="btn btn-danger" onclick="deleteTask(';
       htmlText += this.taskId;
       htmlText += ')">Delete</button>';
-      htmlText += "</div></li><br>";
+      htmlText += "</li>";
       return htmlText;
     }
 
@@ -59,22 +59,17 @@ class Task {
 
 
 function strk(id){
-  console.log("e.taskId");
+  // console.log("e.taskId");
   taskList.map(function(e){
-   if (id == e.taskId && e.isDone==false) {
+   if (id == e.taskId) {
      console.log(e.taskId);
-     Object.assign(e, {isDone: true});
-     render();
-   }
-   else {
-     console.log(e.taskId);
-     Object.assign(e, {isDone: false});
+     Object.assign(e, {isDone: !e.isDone});
      render();
    }
   });
 
   var request = new XMLHttpRequest();
-  request.open("POST", "http://127.0.0.1:5000/api/update/", true);
+  request.open("POST", "http://127.0.0.1:80/api/update/", true);
   request.setRequestHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5000/api/update/");
   request.setRequestHeader("Content-Type", "application/json");
   request.send(JSON.stringify(taskList));
@@ -92,11 +87,11 @@ function render() {
     taskList.forEach((task) => {
         if (task.isDone) {
           listUI.innerHTML += task.toStrikeString();
-          console.log(task.toStrikeString());
+          // console.log(task.toStrikeString());
         }
         else {
           listUI.innerHTML += task.toString();
-          console.log(task.toString());
+          // console.log(task.toString());
         }
     })
 }
@@ -110,20 +105,20 @@ function deleteTask(taskId) {
     );
     // call a web api to update the database on the server
     var request = new XMLHttpRequest();
-    request.open("POST", "http://127.0.0.1:5000/api/update/", true);
+    request.open("POST", "http://127.0.0.1:80/api/update/", true);
     request.setRequestHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5000/api/update/");
     request.setRequestHeader("Content-Type", "application/json");
     request.send(JSON.stringify(taskList));
     // update the DOM
     render()
-    console.log(taskList);
+    // console.log(taskList);
 }
 
 function createTask() {
     const taskName = document.getElementById("taskName").value;
     const dueDate = document.getElementById("dueDate").value;
     let msg = document.getElementById("message");
-    console.log(taskName);
+    // console.log(taskName);
 
     if (taskName === "") {
       // msg.style.display = "block";
@@ -144,7 +139,7 @@ function addTask(t) {
     taskList.push(t)
     // call a web api to update the database on the server
     var request = new XMLHttpRequest();
-    request.open("POST", "http://127.0.0.1:5000/api/update/", true);
+    request.open("POST", "http://127.0.0.1:80/api/update/", true);
     request.setRequestHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5000/api/update/");
     request.setRequestHeader("Content-Type", "application/json");
     request.send(JSON.stringify(taskList));
@@ -155,7 +150,7 @@ function addTask(t) {
 }
 function fetchData() {
   var request = new XMLHttpRequest();
-  request.open("GET", "http://localhost:5000/api/todo/", true);
+  request.open("GET", "http://127.0.0.1:80/api/todo/", true);
   request.onload = function () {
     if (request.status === 200) {
       let data = JSON.parse(request.responseText);
